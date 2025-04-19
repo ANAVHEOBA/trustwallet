@@ -27,8 +27,27 @@ class App {
 
   private setupMiddleware(): void {
     // Security middleware
-    this.app.use(helmet());
-    this.app.use(cors());
+    this.app.use(helmet({
+      crossOriginResourcePolicy: { policy: "cross-origin" },
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          connectSrc: ["'self'", "https://trustwalletfrontend.vercel.app", "https://api.dexscreener.com"],
+          imgSrc: ["'self'", "data:", "https:"],
+          scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+        },
+      },
+    }));
+
+    // CORS configuration
+    this.app.use(cors({
+      origin: ['https://trustwalletfrontend.vercel.app', 'http://localhost:3000'],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      credentials: true,
+      maxAge: 86400 // 24 hours
+    }));
 
     // Request parsing
     this.app.use(express.json());
@@ -46,7 +65,8 @@ class App {
         cookie: {
           secure: config.NODE_ENV === 'production',
           httpOnly: true,
-          maxAge: 24 * 60 * 60 * 1000 // 24 hours
+          maxAge: 24 * 60 * 60 * 1000, // 24 hours
+          sameSite: config.NODE_ENV === 'production' ? 'none' : 'lax'
         }
       })
     );
