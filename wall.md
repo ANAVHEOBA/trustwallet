@@ -1,0 +1,12 @@
+1. unusual
+2. hood
+3. rice
+4. virus
+5. jeans
+6. achieve
+7. want
+8. burst
+9. truck
+10. stove
+11. ticket
+12. bulk
