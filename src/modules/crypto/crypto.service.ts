@@ -81,7 +81,25 @@ export class CryptoService {
       const url = `https://api.dexscreener.com/latest/dex/pairs/${pairAddress}`;
 
       const response = await this.fetchWithRetry(url);
-      const data: DexScreenerResponse = await response.json();
+      const jsonData = await response.json();
+      
+      // Type guard to verify the response shape
+      const isDexScreenerResponse = (data: any): data is DexScreenerResponse => {
+        return (
+          typeof data === 'object' &&
+          data !== null &&
+          (
+            (Array.isArray(data.pairs) || data.pairs === null) ||
+            (typeof data.pair === 'object' || data.pair === null)
+          )
+        );
+      };
+
+      if (!isDexScreenerResponse(jsonData)) {
+        throw new Error('Invalid response format from DexScreener API');
+      }
+
+      const data: DexScreenerResponse = jsonData;
       const pair = data.pairs?.[0] || data.pair;
 
       if (pair) {
