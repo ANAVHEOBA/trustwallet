@@ -194,3 +194,24 @@ a@a:~/trustwallet$ curl -X POST http://localhost:5000/api/wallet/verify -H "Cont
 
 a@a:~/trustwallet$ curl -X POST http://localhost:5000/api/wallet/transfer -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MDM5YWEyYzkzMTY5NzBlYzdlZGY0YSIsIndhbGxldEFkZHJlc3MiOiIweDZjZmQ4ZDI4NTgwYjRkNTNiY2E1OWY4OWQ3ZmFmMzI0YTI0N2U5ZWEiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTA2NjY2NywiZXhwIjoxNzQ1MTUzMDY3fQ.qTmu4usBZu6a7inyCz2z2h0A1bGQb1TfNjhHF37qLA4" -d '{"toAddress": "0x1234567890abcdef1234567890abcdef12345678", "amount": 1.5, "symbol": "BTC"}'
 {"success":true,"data":{"message":"Please contact our customer care team to process your withdrawal request. For security purposes, all withdrawals require administrative approval.","contactEmail":"customercare@trustwallet.com","emailSubject":"Withdrawal Request","requestDetails":{"fromAddress":"0x6cfd8d28580b4d53bca59f89d7faf324a247e9ea","toAddress":"0x1234567890abcdef1234567890abcdef12345678","amount":1.5,"symbol":"BTC","timestamp":"2025-04-19T13:01:59.897Z"}}}a@a:~/trustwallet$ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+a@a:~/trustwallet$ curl -X POST http://localhost:5000/api/wallet/import -H "Content-Type: application/json" -d '{"seedPhrase": "unusual hood rice virus jeans achieve want burst truck stove ticket bulk"}'
+{"success":true,"data":{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MDcxN2VjYzdiYTIzMzE3MjVlM2QyZCIsIndhbGxldEFkZHJlc3MiOiIweDIwNzJkNWZkYzNmNDZhMWY3ODk3NWMzY2NmNDMxN2MzOGU0NGU2MjIiLCJyb2xlIjoidXNlciIsImlhdCI6MTc0NTI5NTM0MiwiZXhwIjoxNzQ1MzgxNzQyfQ.bsR9CrKoLgIuzSy4MLzcNpKQ_2QwvxrvAWXSO2RFHCw","walletAddress":"0x2072d5fdc3f46a1f78975c3ccf4317c38e44e622","message":"Wallet imported successfully"}}a@a:~/trustwallet$ 

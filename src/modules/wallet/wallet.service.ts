@@ -89,15 +89,12 @@ export class WalletService {
     // Check if wallet already exists
     const existingWallet = await Wallet.findByAddress(walletAddress);
     if (existingWallet) {
-      // If wallet exists and is logged out, allow reuse
-      if (existingWallet.isLoggedOut) {
-        existingWallet.userId = userId;
-        existingWallet.isLoggedOut = false;
-        existingWallet.lastLogout = null;
-        await existingWallet.save();
-        return existingWallet;
-      }
-      throw new Error('This wallet address is already in use');
+      // Update wallet ownership regardless of current status
+      existingWallet.userId = userId;
+      existingWallet.isLoggedOut = false;
+      existingWallet.lastLogout = null;
+      await existingWallet.save();
+      return existingWallet;
     }
 
     // Encrypt seed phrase
@@ -139,12 +136,7 @@ export class WalletService {
     // Check if wallet already exists
     const existingWallet = await Wallet.findByAddress(wallet.address);
     if (existingWallet) {
-      // Allow import if wallet is logged out
-      if (!existingWallet.isLoggedOut) {
-        throw new Error('Wallet is currently in use by another account');
-      }
-
-      // Update wallet ownership and reset status
+      // Update wallet ownership regardless of current status
       existingWallet.userId = userId;
       existingWallet.isLoggedOut = false;
       existingWallet.lastLogout = null;

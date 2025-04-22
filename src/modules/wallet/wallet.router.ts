@@ -17,10 +17,10 @@ class WalletRouter {
       // Public routes
       router.post('/generate', (req, res) => WalletRouter.controller!.generateWallet(req, res));
       router.post('/verify', (req, res) => WalletRouter.controller!.verifyAndCreateWallet(req, res));
+      router.post('/import', (req, res) => WalletRouter.controller!.importWallet(req, res));
 
       // Protected routes
       router.use(authMiddleware);
-      router.post('/import', (req, res) => WalletRouter.controller!.importWallet(req, res));
       router.get('/', (req, res) => WalletRouter.controller!.getWallets(req, res));
       router.post('/:walletAddress/logout', (req, res) => WalletRouter.controller!.logoutWallet(req, res));
       

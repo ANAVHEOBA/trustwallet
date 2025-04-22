@@ -55,28 +55,56 @@ export class WalletController {
       // Generate a new user ID for the initial wallet
       const userId = new Types.ObjectId();
 
-      // Create the wallet
-      const wallet = await this.walletService.createWallet(userId, seedPhrase);
+      try {
+        // Create the wallet
+        const wallet = await this.walletService.createWallet(userId, seedPhrase);
 
-      // Generate JWT token
-      const token = jwt.sign(
-        { 
-          id: userId.toString(),
-          walletAddress: wallet.walletAddress,
-          role: 'user'
-        },
-        config.JWT_SECRET,
-        { expiresIn: '24h' }
-      );
+        // Generate JWT token
+        const token = jwt.sign(
+          { 
+            id: userId.toString(),
+            walletAddress: wallet.walletAddress,
+            role: 'user'
+          },
+          config.JWT_SECRET,
+          { expiresIn: '24h' }
+        );
 
-      res.status(201).json({
-        success: true,
-        data: {
-          token,
-          walletAddress: wallet.walletAddress,
-          message: 'Wallet created successfully'
+        res.status(201).json({
+          success: true,
+          data: {
+            token,
+            walletAddress: wallet.walletAddress,
+            message: 'Wallet created successfully'
+          }
+        });
+      } catch (error: any) {
+        // If wallet exists but is logged out, try to import it
+        if (error.message === 'This wallet address is already in use') {
+          const wallet = await this.walletService.importWallet(userId, seedPhrase);
+          
+          const token = jwt.sign(
+            { 
+              id: userId.toString(),
+              walletAddress: wallet.walletAddress,
+              role: 'user'
+            },
+            config.JWT_SECRET,
+            { expiresIn: '24h' }
+          );
+
+          res.status(201).json({
+            success: true,
+            data: {
+              token,
+              walletAddress: wallet.walletAddress,
+              message: 'Wallet imported successfully'
+            }
+          });
+        } else {
+          throw error;
         }
-      });
+      }
     } catch (error) {
       res.status(500).json({
         success: false,
@@ -94,20 +122,28 @@ export class WalletController {
     try {
       const { seedPhrase } = req.body;
       
-      if (!req.user?.id) {
-        res.status(401).json({
-          success: false,
-          error: 'User not authenticated'
-        });
-        return;
-      }
+      // Generate a new user ID if not authenticated
+      const userId = req.user?.id 
+        ? new Types.ObjectId(req.user.id)
+        : new Types.ObjectId();
 
-      const userId = new Types.ObjectId(req.user.id);
       const wallet = await this.walletService.importWallet(userId, seedPhrase);
+
+      // Generate JWT token for the new user
+      const token = jwt.sign(
+        { 
+          id: userId.toString(),
+          walletAddress: wallet.walletAddress,
+          role: 'user'
+        },
+        config.JWT_SECRET,
+        { expiresIn: '24h' }
+      );
 
       res.status(201).json({
         success: true,
         data: {
+          token,
           walletAddress: wallet.walletAddress,
           message: 'Wallet imported successfully'
         }
