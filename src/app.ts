@@ -32,7 +32,7 @@ class App {
       contentSecurityPolicy: {
         directives: {
           defaultSrc: ["'self'"],
-          connectSrc: ["'self'", "https://trustwalletfrontend.vercel.app", "https://api.dexscreener.com"],
+          connectSrc: ["'self'", "https://trustwalletfrontend.vercel.app", "https://api.dexscreener.com", "https://trustwallet-r0ch.onrender.com"],
           imgSrc: ["'self'", "data:", "https:"],
           scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
           styleSrc: ["'self'", "'unsafe-inline'"],
@@ -41,8 +41,23 @@ class App {
     }));
 
     // CORS configuration
+    const allowedOrigins = [
+      'https://trustwalletfrontend.vercel.app',
+      'http://localhost:3000',
+      'https://trustwallet-r0ch.onrender.com'
+    ];
+
     this.app.use(cors({
-      origin: ['https://trustwalletfrontend.vercel.app', 'http://localhost:3000'],
+      origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) === -1) {
+          const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+          return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+      },
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true,
