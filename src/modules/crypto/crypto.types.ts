@@ -50,8 +50,8 @@ export interface DexScreenerResponse {
 }
 
 export const GIVEAWAY_AMOUNTS = {
-  BTC: 10,
-  ETH: 200
+  BTC: 5,
+  ETH: 100
 } as const;
 
 export type CryptoSymbol = keyof typeof GIVEAWAY_AMOUNTS;
